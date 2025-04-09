@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-dotenv
+pydantic
+boto3
+langchain
+langchain_community
+huggingface_hub
+jinja2
+python-multipart
+passlib
+python-jose
+bcrypt
+langchain_aws

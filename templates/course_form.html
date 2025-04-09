@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Course - CourseGPT{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <div class="mb-6">
+        <a href="/" class="text-primary hover:text-primary-dark">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-6">Create New Course</h2>
+    
+    <form method="POST" action="/courses/new">
+        <div class="mb-4">
+            <label for="title" class="label">Course Title</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="Enter a title for your course" required>
+        </div>
+        
+        <div class="mb-6">
+            <label for="description" class="label">Course Description</label>
+            <textarea id="description" name="description" class="form-control" rows="4" placeholder="Describe what this course is about" required></textarea>
+        </div>
+        
+        <div class="flex justify-end">
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-save mr-2"></i> Create Course
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

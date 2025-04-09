@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} - CourseGPT{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <a href="/" class="text-primary hover:text-primary-dark">
+        <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div class="flex justify-between items-start">
+        <div>
+            <h1 class="text-2xl font-bold mb-2">{{ course.title }}</h1>
+            <p class="text-gray-600">{{ course.description }}</p>
+        </div>
+        <div>
+            <a href="/courses/{{ course.id }}/modules/new" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i> Add Module
+            </a>
+        </div>
+    </div>
+</div>
+
+<h2 class="text-xl font-semibold mb-4">Course Modules</h2>
+
+{% if modules %}
+<div class="space-y-4">
+    {% for module in modules %}
+    <div class="bg-white rounded-lg shadow-sm p-5 border-l-4 border-primary">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="font-semibold text-lg mb-1">{{ module.title }}</h3>
+                <p class="text-gray-600 mb-2">{{ module.description }}</p>
+                <div class="flex space-x-4 text-sm text-gray-500">
+                    <span><i class="fas fa-chart-bar mr-1"></i> {{ module.difficulty }}</span>
+                    <span><i class="far fa-clock mr-1"></i> {{ module.estimated_time }}</span>
+                    <span><i class="fas fa-book mr-1"></i> {{ module.lessons|length }} lessons</span>
+                </div>
+            </div>
+            <a href="/modules/{{ module.id }}" class="text-primary hover:text-primary-dark">
+                <i class="fas fa-arrow-right"></i> View
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-white rounded-lg shadow-sm p-8 text-center">
+    <div class="text-5xl text-gray-300 mb-4">
+        <i class="fas fa-cubes"></i>
+    </div>
+    <h2 class="text-xl font-semibold mb-2">No modules yet</h2>
+    <p class="text-gray-600 mb-6">Add your first module to start building your course.</p>
+    <a href="/courses/{{ course.id }}/modules/new" class="btn-primary inline-block">
+        <i class="fas fa-plus mr-2"></i> Add First Module
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Add Module - {{ course.title }} - CourseGPT{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <div class="mb-6">
+        <a href="/courses/{{ course.id }}" class="text-primary hover:text-primary-dark">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Course
+        </a>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-6">Add Module to "{{ course.title }}"</h2>
+    
+    {% if ai_generate %}
+    <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200" x-data="{ generating: false, modelType: 'nova', topic: '' }">
+        <h3 class="text-lg font-semibold mb-2">Generate with AI</h3>
+        <p class="text-gray-600 mb-4">Let AI help you create a module structure based on a topic.</p>
+        
+        <div class="mb-4">
+            <label for="topic" class="label">Topic</label>
+            <input type="text" id="topic" x-model="topic" class="form-control" placeholder="Enter a topic for your module">
+        </div>
+        
+        <div class="mb-4">
+            <label class="label">AI Model</label>
+            <div class="flex space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="model_type" value="nova" x-model="modelType" checked>
+                    <span class="ml-2">Nova (Fast)</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="model_type" value="llama" x-model="modelType">
+                    <span class="ml-2">Llama (Balanced)</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="model_type" value="mistral" x-model="modelType">
+                    <span class="ml-2">Mistral (Creative)</span>
+                </label>
+            </div>
+        </div>
+        
+        <button 
+            @click="
+                if(topic.trim() === '') {
+                    alert('Please enter a topic');
+                    return;
+                }
+                generating = true;
+                fetch('/courses/{{ course.id }}/modules/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'topic': topic,
+                        'model_type': modelType
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    generating = false;
+                    if(data.success) {
+                        window.location.href = '/modules/' + data.module_id;
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    generating = false;
+                    alert('Error: ' + error);
+                });
+            "
+            class="btn-primary"
+            :disabled="generating"
+        >
+            <template x-if="!generating">
+                <span><i class="fas fa-magic mr-2"></i> Generate Module</span>
+            </template>
+            <template x-if="generating">
+                <div class="flex items-center">
+                    <div class="spinner mr-2 w-5 h-5"></div>
+                    <span>Generating...</span>
+                </div>
+            </template>
+        </button>
+    </div>
+    
+    <div class="text-center text-gray-500 my-4">- OR -</div>
+    {% endif %}
+    
+    <form method="POST" action="/courses/{{ course.id }}/modules/new">
+        <div class="mb-4">
+            <label for="title" class="label">Module Title</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="Enter a title for your module" required>
+        </div>
+        
+        <div class="mb-4">
+            <label for="description" class="label">Module Description</label>
+            <textarea id="description" name="description" class="form-control" rows="3" placeholder="Describe what this module covers" required></textarea>
+        </div>
+        
+        <div class="mb-4">
+            <label for="prerequisites" class="label">Prerequisites (comma separated)</label>
+            <input type="text" id="prerequisites" name="prerequisites" class="form-control" placeholder="e.g. Basic programming, HTML knowledge">
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+                <label for="difficulty" class="label">Difficulty Level</label>
+                <select id="difficulty" name="difficulty" class="form-control">
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="estimated_time" class="label">Estimated Completion Time</label>
+                <input type="text" id="estimated_time" name="estimated_time" class="form-control" placeholder="e.g. 2 hours, 3 days">
+            </div>
+        </div>
+        
+        <input type="hidden" name="ai_generate" value="false">
+        
+        <div class="flex justify-end">
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-save mr-2"></i> Create Module
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
