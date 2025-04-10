@@ -13,7 +13,7 @@
     <h2 class="text-2xl font-bold mb-6">Add Module to "{{ course.title }}"</h2>
     
     {% if ai_generate %}
-    <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200" x-data="{ generating: false, modelType: 'nova', topic: '' }">
+    <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200" x-data="{ generating: false, modelType: 'mistral', topic: '' }">
         <h3 class="text-lg font-semibold mb-2">Generate with AI</h3>
         <p class="text-gray-600 mb-4">Let AI help you create a module structure based on a topic.</p>
         
@@ -26,7 +26,7 @@
             <label class="label">AI Model</label>
             <div class="flex space-x-4">
                 <label class="inline-flex items-center">
-                    <input type="radio" name="model_type" value="nova" x-model="modelType" checked>
+                    <input type="radio" name="model_type" value="nova" x-model="modelType">
                     <span class="ml-2">Nova (Fast)</span>
                 </label>
                 <label class="inline-flex items-center">
@@ -34,7 +34,7 @@
                     <span class="ml-2">Llama (Balanced)</span>
                 </label>
                 <label class="inline-flex items-center">
-                    <input type="radio" name="model_type" value="mistral" x-model="modelType">
+                    <input type="radio" name="model_type" value="mistral" x-model="modelType" checked>
                     <span class="ml-2">Mistral (Creative)</span>
                 </label>
             </div>
